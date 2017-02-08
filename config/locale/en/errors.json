@@ -1,0 +1,22 @@
+{
+  "errors": {
+    "not_found": "404 - Page Not Found",
+
+    "sign_in": {
+      "invalid_email": "Invalid Email",
+      "invalid_password": "Invalid Password"
+    },
+    "sign_up": {
+      "invalid_email": "Invalid Email",
+      "invalid_password": "Invalid Password",
+      "invalid_confirm_password": "Passwords do not match"
+    },
+
+    "confirm": {
+      "email": "Confirm your email",
+      "email_desc": "we sent one to %s",
+      "resend_email": "to resend email click ",
+      "resend_here": "here"
+    }
+  }
+}
