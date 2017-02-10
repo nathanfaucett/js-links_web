@@ -1,0 +1,10 @@
+{
+  "post": {
+    "create": "Create a new Link",
+    "title": "Title",
+    "href": "href",
+    "subject": "Subject",
+    "tags": "Tags",
+    "submit": "Create"
+  }
+}

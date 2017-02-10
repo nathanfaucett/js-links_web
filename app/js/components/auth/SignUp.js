@@ -50,8 +50,6 @@ SignUp.contextTypes = {
     i18n: propTypes.func.isRequired
 };
 
-SignUpPrototype.displayName = "SignUp";
-
 SignUpPrototype.componentDidMount = function() {
     UserStore.on("onSignUp", this.onSignUp);
     SignUpStore.addChangeListener(this.onInput);

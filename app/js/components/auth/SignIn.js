@@ -49,8 +49,6 @@ SignIn.contextTypes = {
     i18n: propTypes.func.isRequired
 };
 
-SignInPrototype.displayName = "SignIn";
-
 SignInPrototype.componentDidMount = function() {
     UserStore.on("onSignIn", this.onSignIn);
     SignInStore.addChangeListener(this.onInput);

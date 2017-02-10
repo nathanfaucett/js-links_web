@@ -17,6 +17,13 @@
       "email_desc": "we sent one to %s",
       "resend_email": "to resend email click ",
       "resend_here": "here"
+    },
+
+    "post": {
+      "invalid_title": "Invalid title",
+      "invalid_subject": "Invalid Subject, example (This Is A Subject)",
+      "invalid_href": "Invalid href",
+      "invalid_tags": "Invalid Tags, example (Tag1 Tag2, Tag3)"
     }
   }
 }
