@@ -107,10 +107,6 @@ PostCreatePrototype._onSubmit = function(e) {
         errors = true;
         refs.title.setErrorText(i18n("errors.post.invalid_title"));
     }
-    if (!subject) {
-        errors = true;
-        refs.subject.setErrorText(i18n("errors.post.invalid_subject"));
-    }
     if (invalidHref(href)) {
         errors = true;
         refs.href.setErrorText(i18n("errors.post.invalid_href"));
@@ -129,7 +125,7 @@ PostCreatePrototype._onSubmit = function(e) {
 
 PostCreatePrototype._onPostCreate = function(errors) {
     if (!errors) {
-        //app.page.go("/");
+        app.page.go("/");
     }
 };
 

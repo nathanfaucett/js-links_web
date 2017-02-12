@@ -1,5 +1,6 @@
 var apt = require("@nathanfaucett/apt"),
     request = require("@nathanfaucett/request"),
+    qs = require("@nathanfaucett/qs"),
     app = require("../app");
 
 
@@ -8,10 +9,9 @@ var Store = apt.Store,
 
 
 function PostStore() {
+    var _this = this;
 
     Store.call(this);
-
-    this.posts = {};
 
     this.createChangeCallback = function(name) {
         return function onChange(error, value) {
@@ -33,15 +33,53 @@ PostStorePrototype.fromJSON = function( /* json */ ) {
     return {};
 };
 
-PostStorePrototype.create = function(data, callback) {
-    var _this = this;
+PostStorePrototype.all = function(page, pageSize, callback) {
+    request.get(app.config.baseUrl + "/posts?" + qs.stringify({
+        page_size: pageSize,
+        offset: page * pageSize
+    }), {
+        success: function(response) {
+            callback(undefined, response.data.data);
+        },
+        error: function(response) {
+            callback(response.data);
+        }
+    });
+};
 
+PostStorePrototype.search = function(subject, tags, callback) {
+    request.get(app.config.baseUrl + "/posts?" + qs.stringify({
+        subject: subject,
+        tags: tags
+    }), {
+        success: function(response) {
+            callback(undefined, response.data.data);
+        },
+        error: function(response) {
+            callback(response.data);
+        }
+    });
+};
+
+PostStorePrototype.create = function(data, callback) {
     request.post(app.config.baseUrl + "/posts", {
         post: data
     }, {
         success: function(response) {
-            var post = response.data;
-            _this.posts[post.id] = post;
+            callback(undefined, response.data.data);
+        },
+        error: function(response) {
+            callback(response.data);
+        }
+    });
+};
+
+PostStorePrototype.update = function(id, data, callback) {
+    request.patch(app.config.baseUrl + "/posts/" + id, {
+        post: data
+    }, {
+        success: function(response) {
+            callback(undefined, response.data.data);
         },
         error: function(response) {
             callback(response.data);
@@ -60,8 +98,7 @@ PostStorePrototype.handler = function(action) {
             }, this.createChangeCallback("onPostCreate"));
             break;
         case this.consts.UPDATE:
-            this.update({
-                id: action.id,
+            this.update(action.id, {
                 title: action.title,
                 subject: action.subject,
                 tags: action.tags,

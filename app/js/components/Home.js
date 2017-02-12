@@ -1,5 +1,6 @@
 var virt = require("@nathanfaucett/virt"),
-    propTypes = require("@nathanfaucett/prop_types");
+    propTypes = require("@nathanfaucett/prop_types"),
+    PostAll = require("./posts/PostAll");
 
 
 var HomePrototype;
@@ -38,8 +39,10 @@ HomePrototype.render = function() {
 
     return (
         virt.createView("div", {
-            className: "Home",
-            style: styles.root
-        })
+                className: "Home",
+                style: styles.root
+            },
+            virt.createView(PostAll)
+        )
     );
 };

@@ -65,6 +65,7 @@
     "@nathanfaucett/native.less": "^0.0.3",
     "@nathanfaucett/page": "^0.0.5",
     "@nathanfaucett/prop_types": "^0.0.2",
+    "@nathanfaucett/qs": "0.0.2",
     "@nathanfaucett/request": "^0.0.9",
     "@nathanfaucett/theme": "^0.0.3",
     "@nathanfaucett/trim": "^0.0.1",
