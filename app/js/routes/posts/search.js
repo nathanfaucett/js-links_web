@@ -3,11 +3,11 @@ var RouteStore = require("../../stores/RouteStore"),
 
 
 app.router.route(
-    "/create",
-    function handlePostsCreate(ctx, next) {
+    "/search",
+    function handlePostsSearch(ctx, next) {
         app.dispatchAction({
             type: RouteStore.consts.UPDATE,
-            state: "posts_create",
+            state: "posts_search",
             ctx: ctx
         });
         ctx.end();

@@ -6,13 +6,13 @@ var virt = require("@nathanfaucett/virt"),
     Post = require("./Post");
 
 
-var PostAllPrototype;
+var PostLatestPrototype;
 
 
-module.exports = PostAll;
+module.exports = PostLatest;
 
 
-function PostAll(props, children, context) {
+function PostLatest(props, children, context) {
     virt.Component.call(this, props, children, context);
 
     this.state = {
@@ -21,22 +21,22 @@ function PostAll(props, children, context) {
         posts: []
     };
 }
-virt.Component.extend(PostAll, "PostAll");
+virt.Component.extend(PostLatest, "PostLatest");
 
-PostAllPrototype = PostAll.prototype;
+PostLatestPrototype = PostLatest.prototype;
 
-PostAll.contextTypes = {
+PostLatest.contextTypes = {
     i18n: propTypes.func.isRequired,
     ctx: propTypes.object.isRequired,
     theme: propTypes.object.isRequired,
     size: propTypes.object.isRequired
 };
 
-PostAllPrototype.componentDidMount = function() {
+PostLatestPrototype.componentDidMount = function() {
     this.getPosts();
 };
 
-PostAllPrototype.getPosts = function() {
+PostLatestPrototype.getPosts = function() {
     var _this = this,
         state = this.state;
 
@@ -49,7 +49,7 @@ PostAllPrototype.getPosts = function() {
     });
 };
 
-PostAllPrototype.getStyles = function() {
+PostLatestPrototype.getStyles = function() {
     var styles = {
         root: {
             position: "relative"
@@ -59,12 +59,12 @@ PostAllPrototype.getStyles = function() {
     return styles;
 };
 
-PostAllPrototype.render = function() {
+PostLatestPrototype.render = function() {
     var styles = this.getStyles();
 
     return (
         virt.createView("div", {
-                className: "PostAll",
+                className: "PostLatest",
                 style: styles.root
             },
             virt.createView(List,

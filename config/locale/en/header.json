@@ -1,7 +1,7 @@
 {
   "header": {
     "menu": {
-      "home": "Home",
+      "popular": "Popular",
       "latest": "Latest",
       "create": "Create",
       "search": "Search"

@@ -1,5 +1,6 @@
 var virt = require("@nathanfaucett/virt"),
     propTypes = require("@nathanfaucett/prop_types"),
+    ListItem = require("virt-ui-list_item"),
     Link = require("virt-ui-link");
 
 
@@ -28,36 +29,51 @@ Post.contextTypes = {
 };
 
 PostPrototype.getStyles = function() {
-    var styles = {
-        root: {
-            display: "block",
-            position: "relative"
-        },
-        title: {
-            margin: "0px"
-        },
-        href: {
-            fontSize: "0.5em",
-            paddingLeft: "8px",
-            margin: "0px"
-        },
-        subjectLabel: {
-            display: "inline",
-            margin: "0px"
-        },
-        subject: {
-            display: "inline",
-            margin: "0px"
-        },
-        tagsLabel: {
-            display: "inline",
-            margin: "0px"
-        },
-        tags: {
-            display: "inline",
-            margin: "0px"
-        }
-    };
+    var theme = this.context.theme,
+        styles = {
+            root: {
+                fontSize: "0.75em",
+                position: "relative"
+            },
+            link: {
+                display: "block"
+            },
+            title: {
+                fontSize: "1.5em",
+                lineHeight: "1em",
+                margin: "0px"
+            },
+            href: {
+                fontSize: "0.75em",
+                color: theme.palette.secondaryTextColor,
+                paddingLeft: "8px",
+                margin: "0px"
+            },
+            subjectLabel: {
+                fontSize: "0.9em",
+                color: theme.palette.secondaryTextColor,
+                display: "inline",
+                margin: "0px"
+            },
+            subject: {
+                fontSize: "0.9em",
+                color: theme.palette.secondaryTextColor,
+                display: "inline",
+                margin: "0px"
+            },
+            tagsLabel: {
+                fontSize: "0.9em",
+                color: theme.palette.secondaryTextColor,
+                display: "inline",
+                margin: "0px"
+            },
+            tags: {
+                fontSize: "0.9em",
+                color: theme.palette.secondaryTextColor,
+                display: "inline",
+                margin: "0px"
+            }
+        };
 
     return styles;
 };
@@ -68,19 +84,23 @@ PostPrototype.render = function() {
         styles = this.getStyles();
 
     return (
-        virt.createView(Link, {
+        virt.createView(ListItem, {
                 className: "Post",
-                target: "_blank",
-                href: post.href,
                 style: styles.root
             },
-            virt.createView("h2", {
-                    style: styles.title
+            virt.createView(Link, {
+                    target: "_blank",
+                    href: post.href,
+                    style: styles.link
                 },
-                virt.createView("span", post.title),
-                virt.createView("span", {
-                    style: styles.href
-                }, "(" + post.href + ")")
+                virt.createView("h2", {
+                        style: styles.title
+                    },
+                    virt.createView("span", post.title),
+                    virt.createView("span", {
+                        style: styles.href
+                    }, "(" + post.href + ")")
+                )
             ),
 
             virt.createView("p", {

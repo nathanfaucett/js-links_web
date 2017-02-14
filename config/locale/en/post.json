@@ -5,6 +5,10 @@
     "href": "href",
     "subject": "Subject",
     "tags": "Tags",
-    "submit": "Create"
+    "submit": "Create",
+    "search": {
+      "subject": "Search Subject",
+      "tags": "Search Tags"
+    }
   }
 }
