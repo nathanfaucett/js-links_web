@@ -1,6 +1,7 @@
 var virt = require("@nathanfaucett/virt"),
     css = require("@nathanfaucett/css"),
     propTypes = require("@nathanfaucett/prop_types"),
+    Menu = require("./Menu"),
     Nav = require("./Nav"),
     Wrapper = require("../Wrapper");
 
@@ -52,7 +53,16 @@ HeaderPrototype.render = function() {
                 style: styles.root
             },
             virt.createView(Wrapper,
-                virt.createView(Nav)
+                virt.createView("div", {
+                        className: "col-xs-12 col-sm-12 col-md-6 col-lg-8"
+                    },
+                    virt.createView(Menu)
+                ),
+                virt.createView("div", {
+                        className: "col-xs-12 col-sm-12 col-md-6 col-lg-4"
+                    },
+                    virt.createView(Nav)
+                )
             )
         )
     );

@@ -1,5 +1,6 @@
 var virt = require("@nathanfaucett/virt"),
-    propTypes = require("@nathanfaucett/prop_types");
+    propTypes = require("@nathanfaucett/prop_types"),
+    Link = require("virt-ui-link");
 
 
 var PostPrototype;
@@ -67,7 +68,7 @@ PostPrototype.render = function() {
         styles = this.getStyles();
 
     return (
-        virt.createView("a", {
+        virt.createView(Link, {
                 className: "Post",
                 target: "_blank",
                 href: post.href,

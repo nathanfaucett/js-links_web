@@ -51,7 +51,6 @@ PostAllPrototype.getPosts = function() {
 PostAllPrototype.getStyles = function() {
     var styles = {
         root: {
-            marginTop: "48px",
             position: "relative"
         }
     };

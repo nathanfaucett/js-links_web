@@ -125,6 +125,7 @@ PostCreatePrototype._onSubmit = function(e) {
 
 PostCreatePrototype._onPostCreate = function(errors) {
     if (!errors) {
+        PostCreateStore.clear();
         app.page.go("/");
     }
 };
@@ -150,8 +151,9 @@ PostCreatePrototype._onChange = function(e) {
 PostCreatePrototype.getStyles = function() {
     var styles = {
         root: {
-            marginTop: "48px",
-            position: "relative"
+            paddingTop: "8px",
+            position: "relative",
+            textAlign: "center"
         },
         submitDiv: {
             marginTop: "32px"
