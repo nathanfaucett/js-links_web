@@ -147,6 +147,14 @@ SignInPrototype.render = function() {
                     i18n("sign_in.sign_up")
                 )
             ),
+            virt.createView("p", null,
+                i18n("sign_in.skip_sign_in") + " ",
+                virt.createView(Link, {
+                        href: "/"
+                    },
+                    i18n("sign_in.home")
+                )
+            ),
             virt.createView("form", {
                     className: "grid",
                     onSubmit: this.onSubmit

@@ -4,6 +4,9 @@
         "sign_up": "Sign up",
         "not_member": "Not a Member? ",
         "email": "Email",
-        "password": "Password"
+        "password": "Password",
+
+        "skip_sign_in": "Skip to ",
+        "home": "Home"
     }
 }

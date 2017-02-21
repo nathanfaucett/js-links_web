@@ -47,8 +47,10 @@ PostStorePrototype.all = function(page, pageSize, callback) {
     });
 };
 
-PostStorePrototype.search = function(subject, tags, callback) {
+PostStorePrototype.search = function(subject, tags, page, pageSize, callback) {
     request.get(app.config.baseUrl + "/posts?" + qs.stringify({
+        page_size: pageSize,
+        offset: page * pageSize,
         subject: subject,
         tags: tags
     }), {

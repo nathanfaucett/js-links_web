@@ -1,7 +1,8 @@
 var virt = require("@nathanfaucett/virt"),
     propTypes = require("@nathanfaucett/prop_types"),
     arrayMap = require("@nathanfaucett/array-map"),
-    Link = require("virt-ui-link");
+    Link = require("virt-ui-link"),
+    UserStore = require("../../stores/UserStore");
 
 
 var MENU_ITEMS = [{
@@ -10,9 +11,6 @@ var MENU_ITEMS = [{
     }, {
         name: "header.menu.popular",
         href: "/"
-    }, {
-        name: "header.menu.latest",
-        href: "/latest"
     }, {
         name: "header.menu.create",
         href: "/create"
@@ -59,14 +57,19 @@ MenuPrototype.getStyles = function() {
 
 MenuPrototype.render = function() {
     var i18n = this.context.i18n,
-        styles = this.getStyles();
+        styles = this.getStyles(),
+        menuItems = this.state.menuItems.slice();
+
+    if (!UserStore.isSignedIn()) {
+        menuItems.pop();
+    }
 
     return (
         virt.createView("div", {
                 className: "Menu",
                 style: styles.root
             },
-            arrayMap(this.state.menuItems, function each(menuItem) {
+            arrayMap(menuItems, function each(menuItem) {
                 return virt.createView(Link, {
                         style: styles.menuItem,
                         href: menuItem.href

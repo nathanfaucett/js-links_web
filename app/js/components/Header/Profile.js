@@ -40,6 +40,13 @@ ProfilePrototype.getStyles = function() {
             lineHeight: "16px",
             margin: "0px",
             padding: "8px 0px 8px 8px"
+        },
+        signIn: {
+            display: "inline-block",
+            fontSize: "16px",
+            lineHeight: "16px",
+            margin: "0px",
+            padding: "8px 0px 8px 8px"
         }
     };
 
@@ -47,13 +54,12 @@ ProfilePrototype.getStyles = function() {
 };
 
 ProfilePrototype.render = function() {
-    var styles = this.getStyles();
+    var styles = this.getStyles(),
+        i18n = this.context.i18n,
+        children;
 
-    return (
-        virt.createView("div", {
-                className: "Profile",
-                style: styles.root
-            },
+    if (UserStore.isSignedIn()) {
+        children = [
             virt.createView(Gravatar, {
                 style: styles.img,
                 size: 32,
@@ -62,6 +68,22 @@ ProfilePrototype.render = function() {
             virt.createView("p", {
                 style: styles.email
             }, UserStore.user.email)
+        ];
+    } else {
+        children = [
+            virt.createView("a", {
+                href: "/sign_in",
+                style: styles.signIn
+            }, i18n("sign_in.sign_in"))
+        ];
+    }
+
+    return (
+        virt.createView("div", {
+                className: "Profile",
+                style: styles.root
+            },
+            children
         )
     );
 };

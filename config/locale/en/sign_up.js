@@ -6,6 +6,9 @@
         "email": "Email",
         "password": "Password",
         "confirm_password": "Confirm Password",
-        "locale": "locale"
+        "locale": "locale",
+
+        "skip_sign_up": "Skip to ",
+        "home": "Home"
     }
 }

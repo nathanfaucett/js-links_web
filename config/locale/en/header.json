@@ -2,7 +2,6 @@
   "header": {
     "menu": {
       "popular": "Popular",
-      "latest": "Latest",
       "create": "Create",
       "search": "Search"
     }

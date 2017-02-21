@@ -3,6 +3,8 @@ var virt = require("@nathanfaucett/virt"),
     propTypes = require("@nathanfaucett/prop_types"),
     FlatButton = require("virt-ui-flat_button"),
     Popover = require("virt-ui-popover"),
+    Link = require("virt-ui-link"),
+    UserStore = require("../../stores/UserStore"),
     SubNav = require("./SubNav"),
     Profile = require("./Profile");
 
@@ -80,6 +82,10 @@ NavPrototype.getStyles = function() {
             zIndex: 999,
             top: "46px",
             width: "256px"
+        },
+        signIn: {
+            display: "block",
+            padding: "16px 32px"
         }
     };
 
@@ -89,7 +95,34 @@ NavPrototype.getStyles = function() {
 };
 
 NavPrototype.render = function() {
-    var styles = this.getStyles();
+    var styles = this.getStyles(),
+        i18n = this.context.i18n,
+        children, popover;
+
+    if (UserStore.isSignedIn()) {
+        children = [
+            virt.createView(Profile)
+        ];
+        popover = virt.createView(Popover, {
+                style: styles.popover,
+                origin: {
+                    vertical: "top",
+                    horizontal: "right"
+                },
+                onRequestClose: this.onRequestClose,
+                open: this.state.open
+            },
+            virt.createView(SubNav)
+        );
+    } else {
+        children = [
+            virt.createView(Link, {
+                href: "/sign_in",
+                style: styles.signIn
+            }, i18n("sign_in.sign_in"))
+        ];
+        popover = virt.createView("span");
+    }
 
     return (
         virt.createView("div", {
@@ -101,19 +134,9 @@ NavPrototype.render = function() {
                     onClick: this.onClick,
                     contentStyle: styles.buttonContent
                 },
-                virt.createView(Profile)
+                children
             ),
-            virt.createView(Popover, {
-                    style: styles.popover,
-                    origin: {
-                        vertical: "top",
-                        horizontal: "right"
-                    },
-                    onRequestClose: this.onRequestClose,
-                    open: this.state.open
-                },
-                virt.createView(SubNav)
-            )
+            popover
         )
     );
 };
