@@ -4,7 +4,8 @@ var virt = require("@nathanfaucett/virt"),
     Link = require("virt-ui-link");
 
 
-var PostPrototype;
+var SVG_STAR = "M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z",
+    PostPrototype;
 
 
 module.exports = Post;
@@ -35,8 +36,13 @@ PostPrototype.getStyles = function() {
                 fontSize: "0.75em",
                 position: "relative"
             },
-            link: {
-                display: "block"
+            starLink: {
+                lineHeight: "8px",
+                verticalAlign: "top",
+                display: "inline-block"
+            },
+            titleLink: {
+                display: "inline-block"
             },
             title: {
                 fontSize: "1.5em",
@@ -72,6 +78,21 @@ PostPrototype.getStyles = function() {
                 color: theme.palette.secondaryTextColor,
                 display: "inline",
                 margin: "0px"
+            },
+            info: {
+                paddingTop: "8px",
+                display: "block"
+            },
+            starsDiv: {
+                paddingRight: "8px",
+                display: "inline-block"
+            },
+            subjectDiv: {
+                paddingRight: "8px",
+                display: "inline-block"
+            },
+            tagsDiv: {
+                display: "inline-block"
             }
         };
 
@@ -88,34 +109,63 @@ PostPrototype.render = function() {
                 className: "Post",
                 style: styles.root
             },
-            virt.createView(Link, {
-                    target: "_blank",
-                    href: post.href,
-                    style: styles.link
-                },
-                virt.createView("h2", {
-                        style: styles.title
+            virt.createView("div",
+                virt.createView(Link, {
+                        target: "_blank",
+                        href: post.href,
+                        style: styles.titleLink
                     },
-                    virt.createView("span", post.title),
-                    virt.createView("span", {
-                        style: styles.href
-                    }, "(" + post.href + ")")
+                    virt.createView("h2", {
+                            style: styles.title
+                        },
+                        virt.createView("span", post.title),
+                        virt.createView("span", {
+                            style: styles.href
+                        }, "(" + post.href + ")")
+                    )
                 )
             ),
-
-            virt.createView("p", {
-                style: styles.subjectLabel
-            }, i18n("post.subject") + ": "),
-            virt.createView("p", {
-                style: styles.subject
-            }, post.subject + ", "),
-
-            virt.createView("p", {
-                style: styles.tagsLabel
-            }, i18n("post.tags") + ": "),
-            virt.createView("p", {
-                style: styles.tags
-            }, post.tags.join(", "))
+            virt.createView("div", {
+                    style: styles.info
+                },
+                virt.createView("div", {
+                        style: styles.starsDiv
+                    },
+                    virt.createView(Link, {
+                            style: styles.starLink
+                        },
+                        virt.createView("svg", {
+                                width: 14,
+                                height: 16,
+                                viewBox: "0 0 14 16"
+                            },
+                            virt.createView("path", {
+                                d: SVG_STAR
+                            })
+                        )
+                    )
+                ),
+                virt.createView("div", {
+                        style: styles.subjectDiv
+                    },
+                    virt.createView("p", {
+                        style: styles.subjectLabel
+                    }, i18n("post.subject") + ": "),
+                    virt.createView("p", {
+                        style: styles.subject
+                    }, post.subject + ", ")
+                ),
+                virt.createView("div", {
+                        style: styles.tagsDiv
+                    },
+                    virt.createView("p", {
+                        style: styles.tagsLabel
+                    }, i18n("post.tags") + ": "),
+                    virt.createView("p", {
+                        style: styles.tags
+                    }, post.tags.join(", "))
+                )
+            )
         )
     );
 };
