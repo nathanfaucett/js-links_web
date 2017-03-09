@@ -85,6 +85,7 @@
     "virt-ui-raised_button": "git://github.com/Faucette-libs/virt-ui-raised_button.git",
     "virt-ui-list": "git://github.com/Faucette-libs/virt-ui-list.git",
     "virt-ui-list_item": "git://github.com/Faucette-libs/virt-ui-list_item.git",
-    "virt-ui-text_field": "git://github.com/Faucette-libs/virt-ui-text_field.git"
+    "virt-ui-text_field": "git://github.com/Faucette-libs/virt-ui-text_field.git",
+    "virt-ui-svg_icon": "git://github.com/Faucette-libs/virt-ui-svg_icon.git"
   }
 }

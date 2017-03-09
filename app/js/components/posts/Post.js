@@ -1,7 +1,11 @@
 var virt = require("@nathanfaucett/virt"),
     propTypes = require("@nathanfaucett/prop_types"),
     ListItem = require("virt-ui-list_item"),
-    Link = require("virt-ui-link");
+    SVGIcon = require("virt-ui-svg_icon"),
+    Link = require("virt-ui-link"),
+    app = require("../../app"),
+    UserStore = require("../../stores/UserStore"),
+    PostStore = require("../../stores/PostStore");
 
 
 var SVG_STAR = "M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z",
@@ -12,7 +16,13 @@ module.exports = Post;
 
 
 function Post(props, children, context) {
+    var _this = this;
+
     virt.Component.call(this, props, children, context);
+
+    this.onStar = function(e) {
+        return _this._onStar(e);
+    };
 }
 virt.Component.extend(Post, "Post");
 
@@ -29,6 +39,15 @@ Post.contextTypes = {
     size: propTypes.object.isRequired
 };
 
+PostPrototype._onStar = function() {
+    if (UserStore.isSignedIn()) {
+        app.dispatchAction({
+            type: PostStore.consts.STAR,
+            id: this.props.post.id
+        });
+    }
+};
+
 PostPrototype.getStyles = function() {
     var theme = this.context.theme,
         styles = {
@@ -37,6 +56,8 @@ PostPrototype.getStyles = function() {
                 position: "relative"
             },
             starLink: {
+                width: "16px",
+                height: "14px",
                 lineHeight: "8px",
                 verticalAlign: "top",
                 display: "inline-block"
@@ -53,6 +74,12 @@ PostPrototype.getStyles = function() {
                 fontSize: "0.75em",
                 color: theme.palette.secondaryTextColor,
                 paddingLeft: "8px",
+                margin: "0px"
+            },
+            starCount: {
+                fontSize: "0.9em",
+                color: theme.palette.secondaryTextColor,
+                display: "inline",
                 margin: "0px"
             },
             subjectLabel: {
@@ -84,6 +111,10 @@ PostPrototype.getStyles = function() {
                 display: "block"
             },
             starsDiv: {
+                paddingRight: "0px",
+                display: "inline-block"
+            },
+            starCountDiv: {
                 paddingRight: "8px",
                 display: "inline-block"
             },
@@ -131,19 +162,21 @@ PostPrototype.render = function() {
                 virt.createView("div", {
                         style: styles.starsDiv
                     },
-                    virt.createView(Link, {
+                    virt.createView(SVGIcon, {
+                            onClick: this.onStar,
                             style: styles.starLink
                         },
-                        virt.createView("svg", {
-                                width: 14,
-                                height: 16,
-                                viewBox: "0 0 14 16"
-                            },
-                            virt.createView("path", {
-                                d: SVG_STAR
-                            })
-                        )
+                        virt.createView("path", {
+                            d: SVG_STAR
+                        })
                     )
+                ),
+                virt.createView("div", {
+                        style: styles.starCountDiv
+                    },
+                    virt.createView("p", {
+                        style: styles.starCount
+                    }, post.stars)
                 ),
                 virt.createView("div", {
                         style: styles.subjectDiv

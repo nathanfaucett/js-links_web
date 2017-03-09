@@ -15,13 +15,15 @@ function PostStore() {
 
     this.createChangeCallback = function(name) {
         return function onChange(error, value) {
+            _this.emitChange();
             _this.emit(name, error, value);
         };
     };
 }
 Store.extend(PostStore, "links.PostStore", [
     "CREATE",
-    "UPDATE"
+    "UPDATE",
+    "STAR"
 ]);
 PostStorePrototype = PostStore.prototype;
 
@@ -89,6 +91,17 @@ PostStorePrototype.update = function(id, data, callback) {
     });
 };
 
+PostStorePrototype.star = function(id, callback) {
+    request.post(app.config.baseUrl + "/posts/" + id + "/star", null, {
+        success: function(response) {
+            callback(undefined, response.data.data);
+        },
+        error: function(response) {
+            callback(response.data);
+        }
+    });
+};
+
 PostStorePrototype.handler = function(action) {
     switch (action.type) {
         case this.consts.CREATE:
@@ -106,6 +119,9 @@ PostStorePrototype.handler = function(action) {
                 tags: action.tags,
                 href: action.href
             }, this.createChangeCallback("onPostUpdate"));
+            break;
+        case this.consts.STAR:
+            this.star(action.id, this.createChangeCallback("onPostStar"));
             break;
     }
 };

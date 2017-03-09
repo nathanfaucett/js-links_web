@@ -26,12 +26,8 @@ HeaderOffsetPrototype.getStyles = function() {
             }
         };
 
-    if (size.width < 480) {
-        styles.root.marginTop = "128px";
-    } else if (size.width < 640) {
-        styles.root.marginTop = "96px";
-    } else if (size.width < 768) {
-        styles.root.marginTop = "64px";
+    if (size.width < 640) {
+        styles.root.marginTop = "80px";
     }
 
     return styles;

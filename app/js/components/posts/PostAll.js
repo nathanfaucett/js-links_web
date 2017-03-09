@@ -3,6 +3,7 @@ var virt = require("@nathanfaucett/virt"),
     arrayMap = require("@nathanfaucett/array-map"),
     List = require("virt-ui-list"),
     PostStore = require("../../stores/PostStore"),
+    Pagination = require("../Pagination"),
     Post = require("./Post");
 
 
@@ -13,12 +14,25 @@ module.exports = PostAll;
 
 
 function PostAll(props, children, context) {
+    var _this = this;
+
     virt.Component.call(this, props, children, context);
 
     this.state = {
         page: 0,
         pageSize: 20,
         posts: []
+    };
+
+    this.getPosts = function() {
+        return _this._getPosts();
+    };
+
+    this.onNextPage = function(e) {
+        return _this._onNextPage(e);
+    };
+    this.onPrevPage = function(e) {
+        return _this._onPrevPage(e);
     };
 }
 virt.Component.extend(PostAll, "PostAll");
@@ -33,10 +47,25 @@ PostAll.contextTypes = {
 };
 
 PostAllPrototype.componentDidMount = function() {
-    this.getPosts();
+    PostStore.addChangeListener(this.getPosts);
+    this._getPosts();
+};
+PostAllPrototype.componentWillUnmount = function() {
+    PostStore.removeChangeListener(this.getPosts);
 };
 
-PostAllPrototype.getPosts = function() {
+PostAllPrototype._onNextPage = function() {
+    this.setState({
+        page: this.state.page + 1
+    }, this.getPosts);
+};
+PostAllPrototype._onPrevPage = function() {
+    this.setState({
+        page: this.state.page - 1
+    }, this.getPosts);
+};
+
+PostAllPrototype._getPosts = function() {
     var _this = this,
         state = this.state;
 
@@ -73,7 +102,12 @@ PostAllPrototype.render = function() {
                         post: post
                     });
                 })
-            )
+            ),
+            virt.createView(Pagination, {
+                page: this.state.page,
+                onNext: this.onNextPage,
+                onPrev: this.onPrevPage
+            })
         )
     );
 };

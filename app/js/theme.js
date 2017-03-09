@@ -35,9 +35,9 @@ LinksThemePrototype.getSpacing = function() {
 
 LinksThemePrototype.getPalette = function() {
     return {
-        primaryColor: "#2196f3",
-        secondaryColor: "#9e9e9e",
-        accentColor: "#607d8b",
+        primaryColor: "#3f51b5",
+        secondaryColor: "#607d8b",
+        accentColor: "#3f51b5",
 
         textColor: "rgba(0, 0, 0, 0.87)",
         disabledColor: "rgba(0,0,0,0.12)",
