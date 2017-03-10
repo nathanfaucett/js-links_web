@@ -34,7 +34,7 @@
     "gulp-jsonminify": "^1.0.0",
     "gulp-minify-css": "^1.2.4",
     "gulp-minify-html": "^1.0.6",
-    "jshint": "^2.9.3",
+    "jshint": "^2.9.4",
     "less": "^2.7.1",
     "uglify-js": "^2.7.3",
     "vinyl-fs": "^2.4.3"
@@ -49,11 +49,12 @@
     "@nathanfaucett/cookies": "^0.0.2",
     "@nathanfaucett/create-grid.less": "^0.0.2",
     "@nathanfaucett/css": "^0.0.4",
-    "@nathanfaucett/extend": "^0.0.2",
+    "@nathanfaucett/define_property": "0.0.3",
     "@nathanfaucett/empty_function": "^0.0.1",
     "@nathanfaucett/enums": "^0.0.2",
     "@nathanfaucett/environment": "^0.0.2",
     "@nathanfaucett/event_listener": "^0.0.2",
+    "@nathanfaucett/extend": "^0.0.2",
     "@nathanfaucett/fast_slice": "^0.0.1",
     "@nathanfaucett/get_prototype_of": "^0.0.1",
     "@nathanfaucett/has": "^0.0.2",
@@ -78,14 +79,14 @@
     "virt-ui-flat_button": "git://github.com/Faucette-libs/virt-ui-flat_button.git",
     "virt-ui-font_icon": "git://github.com/Faucette-libs/virt-ui-font_icon.git",
     "virt-ui-link": "git://github.com/Faucette-libs/virt-ui-link.git",
+    "virt-ui-list": "git://github.com/Faucette-libs/virt-ui-list.git",
+    "virt-ui-list_item": "git://github.com/Faucette-libs/virt-ui-list_item.git",
     "virt-ui-menu": "git://github.com/Faucette-libs/virt-ui-menu.git",
     "virt-ui-menu_item": "git://github.com/Faucette-libs/virt-ui-menu_item.git",
     "virt-ui-panel": "git://github.com/Faucette-libs/virt-ui-panel.git",
     "virt-ui-popover": "git://github.com/Faucette-libs/virt-ui-popover.git",
     "virt-ui-raised_button": "git://github.com/Faucette-libs/virt-ui-raised_button.git",
-    "virt-ui-list": "git://github.com/Faucette-libs/virt-ui-list.git",
-    "virt-ui-list_item": "git://github.com/Faucette-libs/virt-ui-list_item.git",
-    "virt-ui-text_field": "git://github.com/Faucette-libs/virt-ui-text_field.git",
-    "virt-ui-svg_icon": "git://github.com/Faucette-libs/virt-ui-svg_icon.git"
+    "virt-ui-svg_icon": "git://github.com/Faucette-libs/virt-ui-svg_icon.git",
+    "virt-ui-text_field": "git://github.com/Faucette-libs/virt-ui-text_field.git"
   }
 }

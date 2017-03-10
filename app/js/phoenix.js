@@ -1,7 +1,12 @@
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function(obj) {
-    return typeof obj;
+var isArray = require("@nathanfaucett/is_array"),
+    defineProperty = require("@nathanfaucett/define_property");
+
+
+var _typeofIterator = typeof(Symbol.iterator);
+var _typeof = typeof(Symbol) === "function" && _typeofIterator === "symbol" ? function(obj) {
+    return typeof(obj);
 } : function(obj) {
-    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    return obj && typeof(Symbol) === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof(obj);
 };
 
 var _createClass = function() {
@@ -10,19 +15,25 @@ var _createClass = function() {
             var descriptor = props[i];
             descriptor.enumerable = descriptor.enumerable || false;
             descriptor.configurable = true;
-            if ("value" in descriptor) descriptor.writable = true;
-            Object.defineProperty(target, descriptor.key, descriptor);
+            if ("value" in descriptor) {
+                descriptor.writable = true;
+            }
+            defineProperty(target, descriptor.key, descriptor);
         }
     }
     return function(Constructor, protoProps, staticProps) {
-        if (protoProps) defineProperties(Constructor.prototype, protoProps);
-        if (staticProps) defineProperties(Constructor, staticProps);
+        if (protoProps) {
+            defineProperties(Constructor.prototype, protoProps);
+        }
+        if (staticProps) {
+            defineProperties(Constructor, staticProps);
+        }
         return Constructor;
     };
 }();
 
 function _toConsumableArray(arr) {
-    if (Array.isArray(arr)) {
+    if (isArray(arr)) {
         for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
             arr2[i] = arr[i];
         }
@@ -125,8 +136,7 @@ var Push = function() {
         key: "matchReceive",
         value: function matchReceive(_ref) {
             var status = _ref.status,
-                response = _ref.response,
-                ref = _ref.ref;
+                response = _ref.response;
 
             this.recHooks.filter(function(h) {
                 return h.status === status;
@@ -340,7 +350,7 @@ var Channel = exports.Channel = function() {
 
     }, {
         key: "onMessage",
-        value: function onMessage(event, payload, ref) {
+        value: function onMessage(event, payload /*, ref */ ) {
             return payload;
         }
     }, {
@@ -425,7 +435,7 @@ var Channel = exports.Channel = function() {
     return Channel;
 }();
 
-var Socket = exports.Socket = function() {
+exports.Socket = function() {
     function Socket(endPoint) {
         var _this4 = this;
 
@@ -788,14 +798,16 @@ var LongPoll = exports.LongPoll = function() {
             }
 
             Ajax.request("GET", this.endpointURL(), "application/json", null, this.timeout, this.ontimeout.bind(this), function(resp) {
+                var status, token, messages;
+
                 if (resp) {
-                    var status = resp.status,
-                        token = resp.token,
-                        messages = resp.messages;
+                    status = resp.status;
+                    token = resp.token;
+                    messages = resp.messages;
 
                     _this9.token = token;
                 } else {
-                    var status = 0;
+                    status = 0;
                 }
 
                 switch (status) {
@@ -839,7 +851,7 @@ var LongPoll = exports.LongPoll = function() {
         }
     }, {
         key: "close",
-        value: function close(code, reason) {
+        value: function close( /* code, reason */ ) {
             this.readyState = SOCKET_STATES.closed;
             this.onclose();
         }
@@ -958,7 +970,7 @@ Ajax.states = {
     complete: 4
 };
 
-var Presence = exports.Presence = {
+exports.Presence = {
     syncState: function syncState(currentState, newState, onJoin, onLeave) {
         var _this13 = this;
 
