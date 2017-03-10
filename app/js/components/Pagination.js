@@ -37,6 +37,11 @@ PaginationPrototype.getStyles = function() {
             textAlign: "center"
         },
         prevPage: {
+            display: "inline-block",
+            width: "48px",
+            height: "48px"
+        },
+        prevPageLink: {
             display: "inline-block"
         },
         prevPageIcon: {
@@ -63,7 +68,7 @@ PaginationPrototype.getStyles = function() {
     };
 
     if (this.props.page === 0) {
-        styles.prevPage.display = "none";
+        styles.prevPageLink.display = "none";
     }
 
     return styles;
@@ -82,6 +87,7 @@ PaginationPrototype.render = function() {
                     style: styles.prevPage
                 },
                 virt.createView(Link, {
+                        style: styles.prevPageLink,
                         onClick: props.onPrev
                     },
                     virt.createView(FontIcon, {

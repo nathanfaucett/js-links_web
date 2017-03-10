@@ -12,6 +12,9 @@ var MENU_ITEMS = [{
         name: "header.menu.popular",
         href: "/"
     }, {
+        name: "header.menu.newest",
+        href: "/newest"
+    }, {
         name: "header.menu.create",
         href: "/create"
     }],

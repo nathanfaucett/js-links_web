@@ -13,6 +13,7 @@ app.router.use(
 );
 
 require("./posts/search");
+require("./posts/newest");
 require("./home");
 
 app.router.use(

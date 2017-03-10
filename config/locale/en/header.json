@@ -3,7 +3,8 @@
     "menu": {
       "popular": "Popular",
       "create": "Create",
-      "search": "Search"
+      "search": "Search",
+      "newest": "Newest"
     }
   }
 }

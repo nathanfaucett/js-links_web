@@ -38,7 +38,8 @@ PostStorePrototype.fromJSON = function( /* json */ ) {
 PostStorePrototype.all = function(page, pageSize, callback) {
     request.get(app.config.baseUrl + "/posts?" + qs.stringify({
         page_size: pageSize,
-        offset: page * pageSize
+        offset: page * pageSize,
+        order_by_stars: true
     }), {
         success: function(response) {
             callback(undefined, response.data.data);
@@ -55,6 +56,21 @@ PostStorePrototype.search = function(subject, tags, page, pageSize, callback) {
         offset: page * pageSize,
         subject: subject,
         tags: tags
+    }), {
+        success: function(response) {
+            callback(undefined, response.data.data);
+        },
+        error: function(response) {
+            callback(response.data);
+        }
+    });
+};
+
+PostStorePrototype.newest = function(page, pageSize, callback) {
+    request.get(app.config.baseUrl + "/posts?" + qs.stringify({
+        page_size: pageSize,
+        offset: page * pageSize,
+        order_by_stars: false
     }), {
         success: function(response) {
             callback(undefined, response.data.data);

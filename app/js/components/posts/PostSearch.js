@@ -21,17 +21,19 @@ module.exports = PostSearch;
 
 
 function PostSearch(props, children, context) {
-    var _this = this;
+    var _this = this,
+        subject = PostSearchStore.get("subject"),
+        tags = PostSearchStore.get("tags");
 
     virt.Component.call(this, props, children, context);
 
     this.state = {
         page: 0,
         pageSize: 20,
-        subject: PostSearchStore.get("subject"),
-        tags: PostSearchStore.get("tags"),
-        searchSubject: PostSearchStore.get("subject"),
-        searchTags: [],
+        subject: subject,
+        tags: tags,
+        searchSubject: cleanSubject(subject),
+        searchTags: cleanTags(tags),
         posts: []
     };
 
@@ -80,11 +82,15 @@ PostSearch.contextTypes = {
 };
 
 PostSearchPrototype.componentDidMount = function() {
+    var _this = this;
+
     PostSearchStore.addChangeListener(this.onInput);
-    PostStore.on("onPostCreate", this.onPostCreate);
-    PostStore.on("onPostUpdate", this.onPostUpdate);
-    PostStore.on("onPostDelete", this.onPostDelete);
-    this._getPosts();
+
+    this._getPosts(function onFirstRender() {
+        PostStore.on("onPostCreate", _this.onPostCreate);
+        PostStore.on("onPostUpdate", _this.onPostUpdate);
+        PostStore.on("onPostDelete", _this.onPostDelete);
+    });
 };
 
 PostSearchPrototype.componentWillUnmount = function() {
@@ -205,7 +211,7 @@ PostSearchPrototype._onPrevPage = function() {
     });
 };
 
-PostSearchPrototype._getPosts = function() {
+PostSearchPrototype._getPosts = function(callback) {
     var _this = this,
         state = this.state;
 
@@ -215,7 +221,7 @@ PostSearchPrototype._getPosts = function() {
             if (!error) {
                 _this.setState({
                     posts: posts
-                });
+                }, callback);
             }
         }
     );

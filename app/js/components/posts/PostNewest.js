@@ -8,13 +8,13 @@ var virt = require("@nathanfaucett/virt"),
     Post = require("./Post");
 
 
-var PostAllPrototype;
+var PostNewestPrototype;
 
 
-module.exports = PostAll;
+module.exports = PostNewest;
 
 
-function PostAll(props, children, context) {
+function PostNewest(props, children, context) {
     var _this = this;
 
     virt.Component.call(this, props, children, context);
@@ -45,18 +45,18 @@ function PostAll(props, children, context) {
         return _this._onPrevPage(e);
     };
 }
-virt.Component.extend(PostAll, "PostAll");
+virt.Component.extend(PostNewest, "PostNewest");
 
-PostAllPrototype = PostAll.prototype;
+PostNewestPrototype = PostNewest.prototype;
 
-PostAll.contextTypes = {
+PostNewest.contextTypes = {
     i18n: propTypes.func.isRequired,
     ctx: propTypes.object.isRequired,
     theme: propTypes.object.isRequired,
     size: propTypes.object.isRequired
 };
 
-PostAllPrototype.componentDidMount = function() {
+PostNewestPrototype.componentDidMount = function() {
     var _this = this;
 
     this._getPosts(function onFirstRender() {
@@ -65,24 +65,24 @@ PostAllPrototype.componentDidMount = function() {
         PostStore.on("onPostDelete", _this.onPostDelete);
     });
 };
-PostAllPrototype.componentWillUnmount = function() {
+PostNewestPrototype.componentWillUnmount = function() {
     PostStore.off("onPostCreate", this.onPostCreate);
     PostStore.off("onPostUpdate", this.onPostUpdate);
     PostStore.off("onPostDelete", this.onPostDelete);
 };
 
-PostAllPrototype._onNextPage = function() {
+PostNewestPrototype._onNextPage = function() {
     this.setState({
         page: this.state.page + 1
     });
 };
-PostAllPrototype._onPrevPage = function() {
+PostNewestPrototype._onPrevPage = function() {
     this.setState({
         page: this.state.page - 1
     });
 };
 
-PostAllPrototype._onPostCreate = function(error, post) {
+PostNewestPrototype._onPostCreate = function(error, post) {
     var posts = this.state.posts;
 
     posts.unshift(post);
@@ -91,7 +91,7 @@ PostAllPrototype._onPostCreate = function(error, post) {
         posts: posts
     });
 };
-PostAllPrototype._onPostUpdate = function(error, post) {
+PostNewestPrototype._onPostUpdate = function(error, post) {
     var posts = this.state.posts,
         i = -1,
         il = posts.length - 1;
@@ -109,7 +109,7 @@ PostAllPrototype._onPostUpdate = function(error, post) {
         posts: posts
     });
 };
-PostAllPrototype._onPostDelete = function(error, post) {
+PostNewestPrototype._onPostDelete = function(error, post) {
     var posts = this.state.posts,
         i = -1,
         il = posts.length - 1;
@@ -129,11 +129,11 @@ PostAllPrototype._onPostDelete = function(error, post) {
     });
 };
 
-PostAllPrototype._getPosts = function(callback) {
+PostNewestPrototype._getPosts = function(callback) {
     var _this = this,
         state = this.state;
 
-    PostStore.all(state.page, state.pageSize, function(error, posts) {
+    PostStore.newest(state.page, state.pageSize, function(error, posts) {
         if (!error) {
             _this.setState({
                 posts: posts
@@ -142,7 +142,7 @@ PostAllPrototype._getPosts = function(callback) {
     });
 };
 
-PostAllPrototype.getStyles = function() {
+PostNewestPrototype.getStyles = function() {
     var styles = {
         root: {
             position: "relative"
@@ -152,12 +152,12 @@ PostAllPrototype.getStyles = function() {
     return styles;
 };
 
-PostAllPrototype.render = function() {
+PostNewestPrototype.render = function() {
     var styles = this.getStyles();
 
     return (
         virt.createView("div", {
-                className: "PostAll",
+                className: "PostNewest",
                 style: styles.root
             },
             virt.createView(List,
