@@ -1,6 +1,7 @@
 var virt = require("@nathanfaucett/virt"),
     propTypes = require("@nathanfaucett/prop_types"),
     arrayMap = require("@nathanfaucett/array-map"),
+    extend = require("@nathanfaucett/extend"),
     List = require("virt-ui-list"),
     PostStore = require("../../stores/PostStore"),
     Pagination = require("../Pagination"),
@@ -27,6 +28,15 @@ function PostAll(props, children, context) {
     this.getPosts = function() {
         return _this._getPosts();
     };
+    this.onPostCreate = function(error, post) {
+        return _this._onPostCreate(error, post);
+    };
+    this.onPostUpdate = function(error, post) {
+        return _this._onPostUpdate(error, post);
+    };
+    this.onPostDelete = function(error, post) {
+        return _this._onPostDelete(error, post);
+    };
 
     this.onNextPage = function(e) {
         return _this._onNextPage(e);
@@ -47,22 +57,73 @@ PostAll.contextTypes = {
 };
 
 PostAllPrototype.componentDidMount = function() {
-    PostStore.addChangeListener(this.getPosts);
+    PostStore.on("onPostCreate", this.onPostCreate);
+    PostStore.on("onPostUpdate", this.onPostUpdate);
+    PostStore.on("onPostDelete", this.onPostDelete);
     this._getPosts();
 };
 PostAllPrototype.componentWillUnmount = function() {
-    PostStore.removeChangeListener(this.getPosts);
+    PostStore.off("onPostCreate", this.onPostCreate);
+    PostStore.off("onPostUpdate", this.onPostUpdate);
+    PostStore.off("onPostDelete", this.onPostDelete);
 };
 
 PostAllPrototype._onNextPage = function() {
     this.setState({
         page: this.state.page + 1
-    }, this.getPosts);
+    });
 };
 PostAllPrototype._onPrevPage = function() {
     this.setState({
         page: this.state.page - 1
-    }, this.getPosts);
+    });
+};
+
+PostAllPrototype._onPostCreate = function(error, post) {
+    var posts = this.state.posts;
+
+    posts.unshift(post);
+
+    this.setState({
+        posts: posts
+    });
+};
+PostAllPrototype._onPostUpdate = function(error, post) {
+    var posts = this.state.posts,
+        i = -1,
+        il = posts.length - 1;
+
+    while (i++ < il) {
+        p = posts[i];
+
+        if (p.id === post.id) {
+            extend(p, post);
+            break;
+        }
+    }
+
+    this.setState({
+        posts: posts
+    });
+};
+PostAllPrototype._onPostDelete = function(error, post) {
+    var posts = this.state.posts,
+        i = -1,
+        il = posts.length - 1;
+
+    while (i++ < il) {
+        p = posts[i];
+
+        if (p.id === post.id) {
+            break;
+        }
+    }
+
+    posts.splice(i, 1);
+
+    this.setState({
+        posts: posts
+    });
 };
 
 PostAllPrototype._getPosts = function() {

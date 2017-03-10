@@ -7,6 +7,7 @@ var virt = require("@nathanfaucett/virt"),
     environment = require("@nathanfaucett/environment"),
 
     HEADER_LOCALE = require("./consts/HEADER_LOCALE"),
+    initSocket = require("./initSocket"),
 
     config = require("./config");
 
@@ -67,6 +68,8 @@ function init(app) {
         });
         callback();
     });
+
+    initSocket();
 
     return root.adapter.messenger;
 }

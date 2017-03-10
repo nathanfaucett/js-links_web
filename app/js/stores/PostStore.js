@@ -127,4 +127,19 @@ PostStorePrototype.handler = function(action) {
 };
 
 
+app.on("init", function onAppInit() {
+    var PostStore = module.exports;
+
+    app.on("posts:create", function onPostCreate(post) {
+        PostStore.emit("onPostCreate", undefined, post);
+    });
+    app.on("posts:update", function onPostUpdate(post) {
+        PostStore.emit("onPostUpdate", undefined, post);
+    });
+    app.on("posts:delete", function onPostCreate(post) {
+        PostStore.emit("onPostDelete", undefined, post);
+    });
+});
+
+
 module.exports = new PostStore();

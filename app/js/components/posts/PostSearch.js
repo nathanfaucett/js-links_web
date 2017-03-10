@@ -1,6 +1,7 @@
 var virt = require("@nathanfaucett/virt"),
     propTypes = require("@nathanfaucett/prop_types"),
     arrayMap = require("@nathanfaucett/array-map"),
+    extend = require("@nathanfaucett/extend"),
     List = require("virt-ui-list"),
     TextField = require("virt-ui-text_field"),
     RaisedButton = require("virt-ui-raised_button"),
@@ -53,8 +54,18 @@ function PostSearch(props, children, context) {
     this.onPrevPage = function(e) {
         return _this._onPrevPage(e);
     };
+
     this.getPosts = function() {
         return _this._getPosts();
+    };
+    this.onPostCreate = function(error, post) {
+        return _this._onPostCreate(error, post);
+    };
+    this.onPostUpdate = function(error, post) {
+        return _this._onPostUpdate(error, post);
+    };
+    this.onPostDelete = function(error, post) {
+        return _this._onPostDelete(error, post);
     };
 }
 virt.Component.extend(PostSearch, "PostSearch");
@@ -70,13 +81,17 @@ PostSearch.contextTypes = {
 
 PostSearchPrototype.componentDidMount = function() {
     PostSearchStore.addChangeListener(this.onInput);
-    PostStore.addChangeListener(this.getPosts);
+    PostStore.on("onPostCreate", this.onPostCreate);
+    PostStore.on("onPostUpdate", this.onPostUpdate);
+    PostStore.on("onPostDelete", this.onPostDelete);
     this._getPosts();
 };
 
 PostSearchPrototype.componentWillUnmount = function() {
     PostSearchStore.removeChangeListener(this.onInput);
-    PostStore.removeChangeListener(this.getPosts);
+    PostStore.off("onPostCreate", this.onPostCreate);
+    PostStore.off("onPostUpdate", this.onPostUpdate);
+    PostStore.off("onPostDelete", this.onPostDelete);
 };
 
 function cleanSubject(subject) {
@@ -132,15 +147,62 @@ PostSearchPrototype._onChange = function(e) {
     });
 };
 
+PostSearchPrototype._onPostCreate = function(error, post) {
+    var posts = this.state.posts;
+
+    posts.unshift(post);
+
+    this.setState({
+        posts: posts
+    });
+};
+PostSearchPrototype._onPostUpdate = function(error, post) {
+    var posts = this.state.posts,
+        i = -1,
+        il = posts.length - 1;
+
+    while (i++ < il) {
+        p = posts[i];
+
+        if (p.id === post.id) {
+            extend(p, post);
+            break;
+        }
+    }
+
+    this.setState({
+        posts: posts
+    });
+};
+PostSearchPrototype._onPostDelete = function(error, post) {
+    var posts = this.state.posts,
+        i = -1,
+        il = posts.length - 1;
+
+    while (i++ < il) {
+        p = posts[i];
+
+        if (p.id === post.id) {
+            break;
+        }
+    }
+
+    posts.splice(i, 1);
+
+    this.setState({
+        posts: posts
+    });
+};
+
 PostSearchPrototype._onNextPage = function() {
     this.setState({
         page: this.state.page + 1
-    }, this.getPosts);
+    });
 };
 PostSearchPrototype._onPrevPage = function() {
     this.setState({
         page: this.state.page - 1
-    }, this.getPosts);
+    });
 };
 
 PostSearchPrototype._getPosts = function() {
