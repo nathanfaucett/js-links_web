@@ -1,1 +1,1 @@
-module.exports = "X-Links-User.locale";
+module.exports = "X-Links-User_locale";
