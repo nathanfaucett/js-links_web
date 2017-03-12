@@ -1,1 +1,1 @@
-module.exports = "X-Links-User_token";
+module.exports = "X-Links-User-token";
