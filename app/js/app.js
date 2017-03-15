@@ -55,6 +55,7 @@ LinksApplicationPrototype.init = function(config, messenger) {
     this.registerStore(RouteStore);
     this.registerStore(UserStore);
     this.registerStore(require("./stores/PostStore"));
+    this.registerStore(require("./stores/MenuStore"));
 
     page.initServer(messenger);
     page.on("request", function onRequest(ctx) {

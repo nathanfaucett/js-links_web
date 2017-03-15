@@ -1,6 +1,6 @@
 var virt = require("@nathanfaucett/virt"),
     propTypes = require("@nathanfaucett/prop_types"),
-    Header = require("../Header"),
+    Nav = require("../Nav"),
     Footer = require("../Footer");
 
 
@@ -57,7 +57,7 @@ LayoutAppPrototype.render = function() {
                 className: "LayoutApp",
                 style: styles.background
             },
-            virt.createView(Header),
+            virt.createView(Nav),
             this.props.render(this.props.ctx),
             virt.createView(Footer)
         )

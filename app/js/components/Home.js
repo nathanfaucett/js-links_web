@@ -1,7 +1,6 @@
 var virt = require("@nathanfaucett/virt"),
     propTypes = require("@nathanfaucett/prop_types"),
     Wrapper = require("./Wrapper"),
-    HeaderOffset = require("./HeaderOffset"),
     PostAll = require("./posts/PostAll");
 
 
@@ -43,10 +42,8 @@ HomePrototype.render = function() {
                 className: "Home",
                 style: styles.root
             },
-            virt.createView(HeaderOffset,
-                virt.createView(Wrapper,
-                    virt.createView(PostAll)
-                )
+            virt.createView(Wrapper,
+                virt.createView(PostAll)
             )
         )
     );

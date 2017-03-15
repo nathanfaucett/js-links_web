@@ -1,32 +1,32 @@
 var virt = require("@nathanfaucett/virt"),
     propTypes = require("@nathanfaucett/prop_types"),
-    Menu = require("virt-ui-menu"),
-    MenuItem = require("virt-ui-menu_item"),
+    List = require("virt-ui-list"),
+    ListItem = require("virt-ui-list_item"),
     FontIcon = require("virt-ui-font_icon"),
     app = require("../../app");
 
 
-var SubNavPrototype;
+var UserMenuPrototype;
 
 
-module.exports = SubNav;
+module.exports = UserMenu;
 
 
-function SubNav(props, children, context) {
+function UserMenu(props, children, context) {
     virt.Component.call(this, props, children, context);
 }
-virt.Component.extend(SubNav, "SubNav");
+virt.Component.extend(UserMenu, "UserMenu");
 
-SubNavPrototype = SubNav.prototype;
+UserMenuPrototype = UserMenu.prototype;
 
-SubNav.contextTypes = {
+UserMenu.contextTypes = {
     i18n: propTypes.func.isRequired,
     ctx: propTypes.object.isRequired,
     theme: propTypes.object.isRequired,
     size: propTypes.object.isRequired
 };
 
-SubNavPrototype.getStyles = function() {
+UserMenuPrototype.getStyles = function() {
     var styles = {
         root: {
             textAlign: "left"
@@ -41,22 +41,22 @@ SubNavPrototype.getStyles = function() {
     return styles;
 };
 
-SubNavPrototype.createOnClick = function(href) {
+UserMenuPrototype.createOnClick = function(href) {
     return function onClick() {
         app.page.go(href);
     };
 };
 
-SubNavPrototype.render = function() {
+UserMenuPrototype.render = function() {
     var styles = this.getStyles();
 
     return (
         virt.createView("div", {
-                className: "SubNav",
+                className: "UserMenu",
                 style: styles.root
             },
-            virt.createView(Menu,
-                virt.createView(MenuItem, {
+            virt.createView(List,
+                virt.createView(ListItem, {
                         onClick: this.createOnClick("/sign_out"),
                         rightIcon: virt.createView(FontIcon, {
                             className: "material-icons"

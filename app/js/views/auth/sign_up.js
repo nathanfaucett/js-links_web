@@ -1,12 +1,12 @@
 var virt = require("@nathanfaucett/virt"),
     app = require("../../app"),
-    LayoutNoHeader = require("../../components/layouts/LayoutNoHeader"),
+    LayoutApp = require("../../components/layouts/LayoutApp"),
     SignUp = require("../../components/auth/SignUp");
 
 
 app.registerPage("sign_up", function(ctx) {
     return (
-        virt.createView(LayoutNoHeader, {
+        virt.createView(LayoutApp, {
             ctx: ctx,
             i18n: app.i18n,
             render: function() {

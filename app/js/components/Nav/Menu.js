@@ -2,6 +2,9 @@ var virt = require("@nathanfaucett/virt"),
     propTypes = require("@nathanfaucett/prop_types"),
     arrayMap = require("@nathanfaucett/array-map"),
     Link = require("virt-ui-link"),
+    List = require("virt-ui-list"),
+    ListItem = require("virt-ui-list_item"),
+    app = require("../../app"),
     UserStore = require("../../stores/UserStore");
 
 
@@ -50,16 +53,22 @@ MenuPrototype.getStyles = function() {
             position: "relative"
         },
         menuItem: {
-            display: "inline-block",
-            margin: "16px 16px 0px 0px"
+            display: "inline-block"
         }
     };
 
     return styles;
 };
 
+MenuPrototype.createOnClick = function(link) {
+    return function onClick() {
+        app.page.go(link);
+    };
+};
+
 MenuPrototype.render = function() {
-    var i18n = this.context.i18n,
+    var _this = this,
+        i18n = this.context.i18n,
         styles = this.getStyles(),
         menuItems = this.state.menuItems.slice();
 
@@ -72,14 +81,19 @@ MenuPrototype.render = function() {
                 className: "Menu",
                 style: styles.root
             },
-            arrayMap(menuItems, function each(menuItem) {
-                return virt.createView(Link, {
-                        style: styles.menuItem,
-                        href: menuItem.href
-                    },
-                    i18n(menuItem.name)
-                );
-            })
+            virt.createView(List,
+                arrayMap(menuItems, function each(menuItem) {
+                    return virt.createView(ListItem, {
+                            onClick: _this.createOnClick(menuItem.href)
+                        },
+                        virt.createView(Link, {
+                                style: styles.menuItem
+                            },
+                            i18n(menuItem.name)
+                        )
+                    );
+                })
+            )
         )
     );
 };

@@ -1,6 +1,5 @@
 var virt = require("@nathanfaucett/virt"),
     propTypes = require("@nathanfaucett/prop_types"),
-    HeaderOffset = require("./HeaderOffset"),
     Wrapper = require("./Wrapper");
 
 
@@ -42,13 +41,11 @@ NotFoundPrototype.render = function() {
                 className: "NotFound",
                 style: styles.root
             },
-            virt.createView(HeaderOffset,
-                virt.createView(Wrapper,
-                    virt.createView("h1", {
-                            style: styles.h1
-                        },
-                        i18n("errors.not_found")
-                    )
+            virt.createView(Wrapper,
+                virt.createView("h1", {
+                        style: styles.h1
+                    },
+                    i18n("errors.not_found")
                 )
             )
         )

@@ -28,7 +28,6 @@ ProfilePrototype.getStyles = function() {
     var styles = {
         root: {
             display: "inline-block",
-            width: "256px",
             padding: "8px"
         },
         img: {

@@ -16,6 +16,7 @@ WrapperPrototype = Wrapper.prototype;
 WrapperPrototype.getStyles = function() {
     var styles = {
         root: {
+            padding: "32px",
             maxWidth: "960px",
             margin: "0 auto"
         }
