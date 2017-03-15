@@ -5,6 +5,7 @@ var virt = require("@nathanfaucett/virt"),
     List = require("virt-ui-list"),
     ListItem = require("virt-ui-list_item"),
     app = require("../../app"),
+    MenuStore = require("../../stores/MenuStore"),
     UserStore = require("../../stores/UserStore");
 
 
@@ -60,9 +61,13 @@ MenuPrototype.getStyles = function() {
     return styles;
 };
 
-MenuPrototype.createOnClick = function(link) {
+MenuPrototype.createOnClick = function(href) {
     return function onClick() {
-        app.page.go(link);
+        app.dispatchAction({
+            type: MenuStore.consts.OPEN,
+            open: false
+        });
+        app.page.go(href);
     };
 };
 

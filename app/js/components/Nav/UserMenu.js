@@ -3,7 +3,8 @@ var virt = require("@nathanfaucett/virt"),
     List = require("virt-ui-list"),
     ListItem = require("virt-ui-list_item"),
     FontIcon = require("virt-ui-font_icon"),
-    app = require("../../app");
+    app = require("../../app"),
+    MenuStore = require("../../stores/MenuStore");
 
 
 var UserMenuPrototype;
@@ -26,6 +27,16 @@ UserMenu.contextTypes = {
     size: propTypes.object.isRequired
 };
 
+UserMenuPrototype.createOnClick = function(href) {
+    return function onClick() {
+        app.dispatchAction({
+            type: MenuStore.consts.OPEN,
+            open: false
+        });
+        app.page.go(href);
+    };
+};
+
 UserMenuPrototype.getStyles = function() {
     var styles = {
         root: {
@@ -39,12 +50,6 @@ UserMenuPrototype.getStyles = function() {
     };
 
     return styles;
-};
-
-UserMenuPrototype.createOnClick = function(href) {
-    return function onClick() {
-        app.page.go(href);
-    };
 };
 
 UserMenuPrototype.render = function() {

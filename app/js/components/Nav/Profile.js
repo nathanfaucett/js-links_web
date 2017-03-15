@@ -1,6 +1,8 @@
 var virt = require("@nathanfaucett/virt"),
     Gravatar = require("@nathanfaucett/virt-gravatar"),
     propTypes = require("@nathanfaucett/prop_types"),
+    app = require("../../app"),
+    MenuStore = require("../../stores/MenuStore"),
     UserStore = require("../../stores/UserStore");
 
 
@@ -11,7 +13,13 @@ module.exports = Profile;
 
 
 function Profile(props, children, context) {
+    var _this = this;
+
     virt.Component.call(this, props, children, context);
+
+    this.onSignIn = function() {
+        return _this._onSignIn();
+    };
 }
 virt.Component.extend(Profile, "Profile");
 
@@ -22,6 +30,14 @@ Profile.contextTypes = {
     ctx: propTypes.object.isRequired,
     theme: propTypes.object.isRequired,
     size: propTypes.object.isRequired
+};
+
+ProfilePrototype._onSignIn = function() {
+    app.dispatchAction({
+        type: MenuStore.consts.OPEN,
+        open: false
+    });
+    app.page.go("/sign_in");
 };
 
 ProfilePrototype.getStyles = function() {
@@ -71,7 +87,7 @@ ProfilePrototype.render = function() {
     } else {
         children = [
             virt.createView("a", {
-                href: "/sign_in",
+                onClick: this.onSignIn,
                 style: styles.signIn
             }, i18n("sign_in.sign_in"))
         ];
