@@ -45,7 +45,11 @@ PostStorePrototype.all = function(page, pageSize, callback) {
             callback(undefined, response.data.data);
         },
         error: function(response) {
-            callback(response.data);
+            if (response.data) {
+                callback(response.data);
+            } else {
+                callback(new Error("404"));
+            }
         }
     });
 };
@@ -61,7 +65,11 @@ PostStorePrototype.search = function(subject, tags, page, pageSize, callback) {
             callback(undefined, response.data.data);
         },
         error: function(response) {
-            callback(response.data);
+            if (response.data) {
+                callback(response.data);
+            } else {
+                callback(new Error("404"));
+            }
         }
     });
 };
@@ -76,7 +84,11 @@ PostStorePrototype.newest = function(page, pageSize, callback) {
             callback(undefined, response.data.data);
         },
         error: function(response) {
-            callback(response.data);
+            if (response.data) {
+                callback(response.data);
+            } else {
+                callback(new Error("404"));
+            }
         }
     });
 };
@@ -89,7 +101,11 @@ PostStorePrototype.create = function(data, callback) {
             callback(undefined, response.data.data);
         },
         error: function(response) {
-            callback(response.data);
+            if (response.data) {
+                callback(response.data);
+            } else {
+                callback(new Error("404"));
+            }
         }
     });
 };
@@ -102,7 +118,11 @@ PostStorePrototype.update = function(id, data, callback) {
             callback(undefined, response.data.data);
         },
         error: function(response) {
-            callback(response.data);
+            if (response.data) {
+                callback(response.data);
+            } else {
+                callback(new Error("404"));
+            }
         }
     });
 };
@@ -113,7 +133,11 @@ PostStorePrototype.star = function(id, callback) {
             callback(undefined, response.data.data);
         },
         error: function(response) {
-            callback(response.data);
+            if (response.data) {
+                callback(response.data);
+            } else {
+                callback(new Error("404"));
+            }
         }
     });
 };

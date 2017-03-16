@@ -68,11 +68,11 @@ NavPrototype.getStyles = function() {
         root: {
             position: "relative"
         },
-        menu: {
+        menuBtn: {
             display: "block",
             position: "absolute",
             top: "8px",
-            right: "-40px"
+            right: "-32px"
         }
     };
 
@@ -84,7 +84,7 @@ NavPrototype.render = function() {
         children = [
             virt.createView("div", {
                     onClick: this.onToggle,
-                    style: styles.menu
+                    style: styles.menuBtn
                 },
                 virt.createView(FontIcon, {
                     className: "material-icons"
