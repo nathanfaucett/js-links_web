@@ -3,5 +3,6 @@ module.exports = {
     flatLocaleMode: true,
     locales: [
         "en"
-    ]
+    ],
+    oauth2: ["google", "github"]
 };

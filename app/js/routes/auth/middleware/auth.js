@@ -10,11 +10,7 @@ function auth(ctx, next) {
 
     app.hasCookie(HEADER_TOKEN, function onHasCookie(error, hasCookie) {
         if (!hasCookie) {
-            if (pathname === "/sign_up") {
-                app.page.go("/sign_up");
-            } else {
-                app.page.go("/sign_in");
-            }
+            app.page.go("/sign_in");
         } else {
             next();
         }

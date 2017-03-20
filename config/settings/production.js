@@ -1,6 +1,7 @@
 module.exports = {
     throwMissingTranslationError: true,
     html5Mode: true,
-    baseUrl: "https://links.org",
-    baseUrlWS: "https://links.org"
+    appUrl: "http://links.hackertarian.com",
+    baseUrl: "http://api.links.hackertarian.com",
+    baseUrlWS: "ws://api.links.hackertarian.com"
 };

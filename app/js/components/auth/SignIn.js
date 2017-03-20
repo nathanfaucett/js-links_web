@@ -6,8 +6,7 @@ var virt = require("@nathanfaucett/virt"),
     TextField = require("virt-ui-text_field"),
     RaisedButton = require("virt-ui-raised_button"),
     app = require("../../app"),
-    UserStore = require("../../stores/UserStore"),
-    SignInStore = require("../../stores/auth/SignInStore");
+    UserStore = require("../../stores/UserStore");
 
 
 var SignInPrototype;
@@ -21,25 +20,14 @@ function SignIn(props, context) {
 
     virt.Component.call(this, props, context);
 
-    this.state = {
-        email: SignInStore.get("email"),
-        password: SignInStore.get("password")
-    };
-
     this.onSignIn = function(errors) {
-        _this._onSignIn(errors);
+        return _this._onSignIn(errors);
     };
-
-    this.onSubmit = function(e) {
-        _this._onSubmit(e);
+    this.signInWithGoogle = function(e) {
+        return _this._signInWithGoogle(e);
     };
-
-    this.onInput = function(name, value) {
-        _this._onInput(name, value);
-    };
-
-    this.onChange = function(e) {
-        _this._onChange(e);
+    this.signInWithGithub = function(e) {
+        return _this._signInWithGithub(e);
     };
 }
 virt.Component.extend(SignIn, "SignIn");
@@ -51,65 +39,27 @@ SignIn.contextTypes = {
 
 SignInPrototype.componentDidMount = function() {
     UserStore.on("onSignIn", this.onSignIn);
-    SignInStore.addChangeListener(this.onInput);
 };
 
 SignInPrototype.componentWillUnmount = function() {
     UserStore.off("onSignIn", this.onSignIn);
-    SignInStore.removeChangeListener(this.onInput);
 };
 
-SignInPrototype._onSubmit = function(e) {
-    var i18n = this.context.i18n,
-        refs = this.refs,
-        errors = false,
-        email, password;
-
-    e.preventDefault();
-
-    email = trim(this.state.email);
-    password = trim(this.state.password);
-
-    if (!email) {
-        errors = true;
-        refs.email.setErrorText(i18n("errors.sign_in.invalid_email"));
-    }
-    if (!password) {
-        errors = true;
-        refs.password.setErrorText(i18n("errors.sign_in.invalid_password"));
-    }
-
-    if (errors === false) {
-        app.dispatchAction({
-            type: UserStore.consts.SIGN_IN,
-            email: email,
-            password: password
-        });
-    }
+SignInPrototype._signInWithGoogle = function() {
+    app.dispatchAction({
+        type: UserStore.consts.SIGN_IN_WITH_GOOGLE
+    });
+};
+SignInPrototype._signInWithGithub = function() {
+    app.dispatchAction({
+        type: UserStore.consts.SIGN_IN_WITH_GITHUB
+    });
 };
 
 SignInPrototype._onSignIn = function(errors) {
     if (!errors) {
         app.page.go("/");
     }
-};
-
-SignInPrototype._onInput = function(name, value) {
-    var state = {};
-    state[name] = value;
-    this.setState(state);
-};
-
-SignInPrototype._onChange = function(e) {
-    var currentTarget = e.currentTarget,
-        name = currentTarget.getAttribute("name"),
-        value = currentTarget.value;
-
-    app.dispatchAction({
-        type: SignInStore.consts.CHANGE,
-        name: name,
-        value: value
-    });
 };
 
 SignInPrototype.getStyles = function() {
@@ -119,8 +69,8 @@ SignInPrototype.getStyles = function() {
             padding: "16px",
             background: css.colors.white
         },
-        lastInput: {
-            marginBottom: "24px"
+        signInBtn: {
+            marginBottom: "8px"
         }
     };
 
@@ -140,14 +90,6 @@ SignInPrototype.render = function() {
                 i18n("sign_in.sign_in")
             ),
             virt.createView("p", null,
-                i18n("sign_in.not_member") + " ",
-                virt.createView(Link, {
-                        href: "/sign_up"
-                    },
-                    i18n("sign_in.sign_up")
-                )
-            ),
-            virt.createView("p", null,
                 i18n("sign_in.skip_sign_in") + " ",
                 virt.createView(Link, {
                         href: "/"
@@ -155,38 +97,19 @@ SignInPrototype.render = function() {
                     i18n("sign_in.home")
                 )
             ),
-            virt.createView("form", {
-                    className: "grid",
-                    onSubmit: this.onSubmit
+            virt.createView("div", {
+                    style: styles.signInBtn
                 },
-                virt.createView("div", {
-                        className: "email"
-                    },
-                    virt.createView(TextField, {
-                        ref: "email",
-                        type: "text",
-                        name: "email",
-                        value: this.state.email,
-                        onChange: this.onChange,
-                        placeholder: i18n("sign_in.email")
-                    })
-                ),
-                virt.createView("div", {
-                        className: "password",
-                        style: styles.lastInput
-                    },
-                    virt.createView(TextField, {
-                        ref: "password",
-                        type: "password",
-                        name: "password",
-                        value: this.state.password,
-                        onChange: this.onChange,
-                        placeholder: i18n("sign_in.password")
-                    })
-                ),
                 virt.createView(RaisedButton, {
-                    onClick: this.onSubmit
-                }, i18n("sign_in.sign_in"))
+                    onClick: this.signInWithGoogle
+                }, i18n("sign_in.sign_in_with_google"))
+            ),
+            virt.createView("div", {
+                    style: styles.signInBtn
+                },
+                virt.createView(RaisedButton, {
+                    onClick: this.signInWithGithub
+                }, i18n("sign_in.sign_in_with_github"))
             )
         )
     );

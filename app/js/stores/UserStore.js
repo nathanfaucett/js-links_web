@@ -3,6 +3,7 @@ var apt = require("@nathanfaucett/apt"),
     indexOf = require("@nathanfaucett/index_of"),
     emptyFunction = require("@nathanfaucett/empty_function"),
     request = require("@nathanfaucett/request"),
+    qs = require("@nathanfaucett/qs"),
     HEADER_LOCALE = require("../consts/HEADER_LOCALE"),
     HEADER_TOKEN = require("../consts/HEADER_TOKEN"),
     app = require("../app");
@@ -11,7 +12,7 @@ var apt = require("@nathanfaucett/apt"),
 var Store = apt.Store,
 
     emptyUser = {
-        confirmed: false,
+        id: -1,
         token: null,
         email: ""
     },
@@ -35,11 +36,9 @@ function UserStore() {
     };
 }
 Store.extend(UserStore, "links.UserStore", [
-    "CONFIRM",
-    "RESEND_CONFIRMATION",
+    "SIGN_IN_WITH_GOOGLE",
+    "SIGN_IN_WITH_GITHUB",
     "CHANGE_LOCALE",
-    "SIGN_IN",
-    "SIGN_UP",
     "SIGN_OUT"
 ]);
 UserStorePrototype = UserStore.prototype;
@@ -87,30 +86,30 @@ function UserStore_setLocale(_this, value) {
     }
 }
 
-UserStorePrototype.isConfirmed = function() {
-    return !!this.user.confirmed;
+UserStorePrototype.isSignedIn = function() {
+    return this.user.id !== -1;
 };
 
-UserStorePrototype.isSignedIn = function() {
-    return this.user.token !== null;
-};
+function UserStore_signUserIn(_this, data_user, callback) {
+    var user = extend(_this.user, data_user);
+
+    app.setCookie(HEADER_TOKEN, user.token, function onSetCookie(error) {
+        if (error) {
+            callback(error);
+        } else {
+            callback(undefined, user);
+        }
+    });
+}
 
 UserStorePrototype.signInWithApiToken = function(data, callback) {
     var _this = this;
 
     request.defaults.headers[HEADER_TOKEN] = data.token;
 
-    request.get(app.config.baseUrl + "/sessions/create_from_token", {
+    request.get(app.config.baseUrl + "/users/create_from_token", {
         success: function(response) {
-            var user = extend(_this.user, response.data.user);
-
-            app.setCookie(HEADER_TOKEN, user.token, function onSetCookie(error) {
-                if (error) {
-                    callback(error);
-                } else {
-                    callback(undefined, user);
-                }
-            });
+            UserStore_signUserIn(_this, response.data, callback);
         },
         error: function(response) {
             delete request.defaults.headers[HEADER_TOKEN];
@@ -119,51 +118,41 @@ UserStorePrototype.signInWithApiToken = function(data, callback) {
     });
 };
 
-UserStorePrototype.signUserInPassword = function(data, callback) {
+UserStorePrototype.signUserInWith = function(provider, callback) {
     var _this = this;
 
-    request.post(app.config.baseUrl + "/sessions", {
-        user: data
-    }, {
+    request.get(app.config.baseUrl + "/users/" + provider, {
         success: function(response) {
-            var user = extend(_this.user, response.data.user);
+            var newWindow = window.open(
+                response.data.data,
+                "_blank",
+                "location=yes,height=570,width=520,scrollbars=yes,status=yes"
+            );
 
-            createUser(user);
+            function onMessage(event) {
+                var data = JSON.parse(event.data);
 
-            app.setCookie(HEADER_TOKEN, user.token, function onSetCookie(error) {
-                if (error) {
-                    callback(error);
-                } else {
-                    callback(undefined, user);
+                switch (data.type) {
+                    case "load":
+                        newWindow.postMessage(JSON.stringify({
+                            type: "provider",
+                            provider: provider
+                        }), app.config.appUrl);
+                        break;
+                    case "success":
+                        window.removeEventListener("message", onMessage);
+                        UserStore_signUserIn(_this, data.user, callback);
+                        break;
+                    case "error":
+                        window.removeEventListener("message", onMessage);
+                        callback(data.error);
+                        break;
                 }
-            });
+            }
+            window.addEventListener("message", onMessage, false);
         },
         error: function(response) {
-            callback(response.data);
-        }
-    });
-};
-
-UserStorePrototype.signUserUpPassword = function(data, callback) {
-    var _this = this;
-
-    request.post(app.config.baseUrl + "/users", {
-        user: data
-    }, {
-        success: function(response) {
-            var user = extend(_this.user, response.data.user);
-
-            createUser(user);
-
-            app.setCookie(HEADER_TOKEN, user.token, function onSetCookie(error) {
-                if (error) {
-                    callback(error);
-                } else {
-                    callback(undefined, user);
-                }
-            });
-        },
-        error: function(response) {
+            delete request.defaults.headers[HEADER_TOKEN];
             callback(response.data);
         }
     });
@@ -185,31 +174,9 @@ UserStorePrototype.signUserOut = function(callback) {
         });
     }
 
-    request["delete"](app.config.baseUrl + "/sessions", {
+    request["delete"](app.config.baseUrl + "/users", {
         success: removeCookie,
         error: removeCookie
-    });
-};
-
-UserStorePrototype.resendConfirmation = function(callback) {
-    request.post(app.config.baseUrl + "/users/resend_confirmation_token", null, {
-        success: function() {
-            callback();
-        },
-        error: function(response) {
-            callback(response.data);
-        }
-    });
-};
-
-UserStorePrototype.confirm = function(data, callback) {
-    request.post(app.config.baseUrl + "/users/confirm/" + data.confirmation_token, null, {
-        success: function() {
-            callback();
-        },
-        error: function(response) {
-            callback(response.data);
-        }
     });
 };
 
@@ -220,28 +187,14 @@ UserStorePrototype.handler = function(action) {
                 this.emit("changeLocale");
             }
             break;
-        case this.consts.SIGN_IN:
-            this.signUserInPassword({
-                email: action.email,
-                password: action.password
-            }, this.createChangeCallback("onSignIn"));
+        case this.consts.SIGN_IN_WITH_GOOGLE:
+            this.signUserInWith("google", this.createChangeCallback("onSignIn"));
             break;
-        case this.consts.SIGN_UP:
-            this.signUserUpPassword({
-                email: action.email,
-                password: action.password
-            }, this.createChangeCallback("onSignUp"));
+        case this.consts.SIGN_IN_WITH_GITHUB:
+            this.signUserInWith("github", this.createChangeCallback("onSignIn"));
             break;
         case this.consts.SIGN_OUT:
             this.signUserOut(this.createChangeCallback("onSignOut"));
-            break;
-        case this.consts.RESEND_CONFIRMATION:
-            this.resendConfirmation(this.createChangeCallback("onResendConfirmation"));
-            break;
-        case this.consts.CONFIRM:
-            this.confirm({
-                confirmation_token: action.confirmation_token
-            }, this.createChangeCallback("onConfirm"));
             break;
     }
 };

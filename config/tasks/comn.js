@@ -49,3 +49,6 @@ module.exports = function(config) {
         }, done);
     };
 };
+
+
+module.exports.compile = compile

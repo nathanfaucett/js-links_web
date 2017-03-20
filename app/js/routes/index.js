@@ -6,7 +6,6 @@ app.router.use(
 );
 
 require("./auth/sign_in");
-require("./auth/sign_up");
 
 app.router.use(
     require("./auth/middleware/auto_token_sign_in")
@@ -20,7 +19,7 @@ app.router.use(
     require("./auth/middleware/redirect")
 );
 
-require("./auth");
+require("./auth/sign_out");
 
 require("./posts/create");
 require("./not_found");

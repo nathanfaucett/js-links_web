@@ -10,6 +10,10 @@ module.exports = {
     js_out: path.join(defaults.app, "index.js"),
     js_map_out: path.join(defaults.app, "index.js.map"),
 
+    oauth2_js_src: path.join(defaults.js, "oauth2.js"),
+    oauth2_js_out: path.join(defaults.app, "oauth2.js"),
+    oauth2_js_map_out: path.join(defaults.app, "oauth2.js.map"),
+
     css_src: path.join(defaults.css, "index.less"),
     css_out: path.join(defaults.app, "index.css"),
 

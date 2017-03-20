@@ -13,6 +13,7 @@ task("default", task.series(task("jsbeautifier"), task("jshint")));
 
 task("config", "compile config to build directory", require("./config/tasks/config")(config));
 task("js", "compile js into one file", task.series(task("config"), require("./config/tasks/comn")(config)));
+task("oauth2_js", "compile oauth2 js into files", task.series(task("config"), require("./config/tasks/oauth2")(config)));
 
 task("css", "compile css into one file", require("./config/tasks/comn_css")(config));
 task("ejs", "compile ejs into one file", require("./config/tasks/ejs")(config));
@@ -42,10 +43,10 @@ task("minify", "minify built app", task.parallel(task("uglify"), task("minify_cs
 
 
 if (config.env !== "production" && config.env !== "staging") {
-    task("build", "builds app in " + config.env, task.parallel(task("js"), task("css"), task("ejs"), task("locale")));
+    task("build", "builds app in " + config.env, task.parallel(task("js"), task("oauth2_js"), task("css"), task("ejs"), task("locale")));
 } else {
     task("build", "builds app in " + config.env, task.series(
-        task.parallel(task("js"), task("css"), task("ejs"), task("copy"), task("locale")),
+        task.parallel(task("js"), task("oauth2_js"), task("css"), task("ejs"), task("copy"), task("locale")),
         task("minify")
     ));
 }
@@ -62,6 +63,7 @@ function reload(done) {
 
 task("reload", reload);
 task("js_reload", "builds js and calls for a reload", task.series(task("js"), task("reload")));
+task("oauth2_js_reload", "builds oauth2 js and calls", task.series(task("oauth2_js")));
 task("css_reload", "builds css and calls for a reload", task.series(task("css"), task("reload")));
 task("ejs_reload", "builds ejs and calls for a reload", task.series(task("ejs"), task("reload")));
 task("locale_reload", "builds locale and calls for a reload", task.series(task("locale"), task("reload")));
@@ -76,8 +78,13 @@ function watch(files, name) {
 task("watch", "starts watching for changes on dev files", function(done) {
     watch([
             config.paths.js + "/**/*.js",
-            "!" + config.paths.js + "/config.js"
+            "!" + config.paths.js + "/config.js",
+            "!" + config.paths.js + "/oauth2.js",
         ], "js_reload"
+    );
+    watch([
+            config.paths.js + "/oauth2.js",
+        ], "oauth2_js_reload"
     );
     watch([config.paths.css + "/**/*.less"], "css_reload");
     watch([config.paths.ejs_src], "ejs_reload");
