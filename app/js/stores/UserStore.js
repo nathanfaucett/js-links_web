@@ -11,7 +11,6 @@ var apt = require("@nathanfaucett/apt"),
 var Store = apt.Store,
 
     emptyUser = {
-        id: -1,
         token: null,
         email: ""
     },
@@ -81,7 +80,7 @@ function UserStore_setLocale(_this, value) {
 }
 
 UserStorePrototype.isSignedIn = function() {
-    return this.user.id !== -1;
+    return this.user.token !== null;
 };
 
 function UserStore_signUserIn(_this, data_user, callback) {
