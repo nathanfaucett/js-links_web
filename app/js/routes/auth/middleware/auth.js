@@ -6,8 +6,6 @@ module.exports = auth;
 
 
 function auth(ctx, next) {
-    var pathname = ctx.pathname;
-
     app.hasCookie(HEADER_TOKEN, function onHasCookie(error, hasCookie) {
         if (!hasCookie) {
             app.page.go("/sign_in");

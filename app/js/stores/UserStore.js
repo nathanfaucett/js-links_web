@@ -3,7 +3,6 @@ var apt = require("@nathanfaucett/apt"),
     indexOf = require("@nathanfaucett/index_of"),
     emptyFunction = require("@nathanfaucett/empty_function"),
     request = require("@nathanfaucett/request"),
-    qs = require("@nathanfaucett/qs"),
     HEADER_LOCALE = require("../consts/HEADER_LOCALE"),
     HEADER_TOKEN = require("../consts/HEADER_TOKEN"),
     app = require("../app");
@@ -43,11 +42,6 @@ Store.extend(UserStore, "links.UserStore", [
 ]);
 UserStorePrototype = UserStore.prototype;
 
-function createUser(user) {
-    app.setCookie(HEADER_TOKEN, user.token);
-    request.defaults.headers[HEADER_TOKEN] = user.token;
-    return user;
-}
 
 function deleteUser(user) {
     app.removeCookie(HEADER_TOKEN);
@@ -92,6 +86,8 @@ UserStorePrototype.isSignedIn = function() {
 
 function UserStore_signUserIn(_this, data_user, callback) {
     var user = extend(_this.user, data_user);
+
+    request.defaults.headers[HEADER_TOKEN] = user.token;
 
     app.setCookie(HEADER_TOKEN, user.token, function onSetCookie(error) {
         if (error) {

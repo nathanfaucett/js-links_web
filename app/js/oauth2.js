@@ -11,7 +11,7 @@ var opener = window.opener,
 
 
 function init(provider) {
-    request.get(config.baseUrl + "/users/"+ provider +"/callback?" + qs.stringify({
+    request.get(config.baseUrl + "/users/" + provider + "/callback?" + qs.stringify({
         code: code
     }), {
         success: function(response) {

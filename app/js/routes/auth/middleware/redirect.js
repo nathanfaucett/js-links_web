@@ -1,5 +1,4 @@
-var indexOf = require("@nathanfaucett/index_of"),
-    app = require("../../../app"),
+var app = require("../../../app"),
     UserStore = require("../../../stores/UserStore");
 
 

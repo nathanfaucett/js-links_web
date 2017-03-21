@@ -1,9 +1,7 @@
 var virt = require("@nathanfaucett/virt"),
     css = require("@nathanfaucett/css"),
-    trim = require("@nathanfaucett/trim"),
     propTypes = require("@nathanfaucett/prop_types"),
     Link = require("virt-ui-link"),
-    TextField = require("virt-ui-text_field"),
     RaisedButton = require("virt-ui-raised_button"),
     app = require("../../app"),
     UserStore = require("../../stores/UserStore");
@@ -69,8 +67,33 @@ SignInPrototype.getStyles = function() {
             padding: "16px",
             background: css.colors.white
         },
-        signInBtn: {
-            marginBottom: "8px"
+        btnImage: {
+            width: "20px",
+            height: "20px",
+            position: "absolute",
+            left: "8px",
+            top: "8px"
+        },
+        divBtn: {
+            marginBottom: "16px"
+        },
+        googleBtn: {
+            width: "256px",
+            backgroundColor: css.colors.white
+        },
+        googleBtnSpan: {
+            fontWeight: "bold",
+            textTransform: "none",
+            color: "#757575"
+        },
+        githubBtn: {
+            width: "256px",
+            backgroundColor: "#24292e"
+        },
+        githubBtnSpan: {
+            fontWeight: "bold",
+            textTransform: "none",
+            color: css.colors.white
         }
     };
 
@@ -98,18 +121,36 @@ SignInPrototype.render = function() {
                 )
             ),
             virt.createView("div", {
-                    style: styles.signInBtn
+                    style: styles.divBtn
                 },
                 virt.createView(RaisedButton, {
-                    onClick: this.signInWithGoogle
-                }, i18n("sign_in.sign_in_with_google"))
+                        style: styles.googleBtn,
+                        onClick: this.signInWithGoogle
+                    },
+                    virt.createView("img", {
+                        style: styles.btnImage,
+                        src: "img/google.png"
+                    }),
+                    virt.createView("span", {
+                        style: styles.googleBtnSpan
+                    }, i18n("sign_in.sign_in_with_google"))
+                )
             ),
             virt.createView("div", {
-                    style: styles.signInBtn
+                    style: styles.divBtn
                 },
                 virt.createView(RaisedButton, {
-                    onClick: this.signInWithGithub
-                }, i18n("sign_in.sign_in_with_github"))
+                        style: styles.githubBtn,
+                        onClick: this.signInWithGithub
+                    },
+                    virt.createView("img", {
+                        style: styles.btnImage,
+                        src: "img/github.png"
+                    }),
+                    virt.createView("span", {
+                        style: styles.githubBtnSpan
+                    }, i18n("sign_in.sign_in_with_github"))
+                )
             )
         )
     );
