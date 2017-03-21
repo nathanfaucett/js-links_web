@@ -7,4 +7,6 @@ app/index.css
 app/index.html
 app/index.js
 app/index.js.map
+app/oauth.js
+app/oauth.js.map
 .envrc
