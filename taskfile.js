@@ -24,12 +24,17 @@ task("locale", "compiles locale files to build directory", require("./config/tas
 task("clean", "clean build files", require("./config/tasks/clean")(config));
 
 
-task("copy_img", "copys app img to build dir", function() {
+task("copy_imgs", "copys app img to build dir", function copy_imgs() {
     return vfs.src([
         config.paths.img + "/**/*"
     ]).pipe(vfs.dest(config.paths.build + "/img"));
 });
-task("copy", "copys app fonts to build dir", task("copy_img"));
+task("copy_oauth2", "copys oauth2 html to build dir", function copy_oauth2() {
+    return vfs.src([
+        config.paths.app + "/oauth2.html"
+    ]).pipe(vfs.dest(config.paths.build));
+});
+task("copy", "copys app fonts to build dir", task.parallel(task("copy_imgs"), task("copy_oauth2")));
 
 
 task("serve", "serve build directory", require("./config/tasks/serve")(config));
