@@ -1,6 +1,7 @@
 var virt = require("@nathanfaucett/virt"),
     css = require("@nathanfaucett/css"),
     propTypes = require("@nathanfaucett/prop_types"),
+    request = require("@nathanfaucett/request"),
     Link = require("virt-ui-link"),
     RaisedButton = require("virt-ui-raised_button"),
     app = require("../../app"),
@@ -43,15 +44,56 @@ SignInPrototype.componentWillUnmount = function() {
     UserStore.off("onSignIn", this.onSignIn);
 };
 
-SignInPrototype._signInWithGoogle = function() {
-    app.dispatchAction({
-        type: UserStore.consts.SIGN_IN_WITH_GOOGLE
+SignInPrototype._signInWith = function(provider) {
+    request.get(app.config.baseUrl + "/users/" + provider, {
+        success: function(response) {
+            var newWindow = window.open(
+                response.data.data,
+                "_blank",
+                "location=yes,height=512,width=512,scrollbars=yes,status=yes"
+            );
+
+            function onMessage(event) {
+                var data = JSON.parse(event.data);
+
+                switch (data.type) {
+                    case "load":
+                        newWindow.postMessage(JSON.stringify({
+                            type: "provider",
+                            provider: provider
+                        }), app.config.appUrl);
+                        break;
+                    case "success":
+                        window.removeEventListener("message", onMessage);
+                        app.dispatchAction({
+                            type: UserStore.consts.OAUTH_SIGN_IN,
+                            user: data.user
+                        });
+                        break;
+                    case "error":
+                        window.removeEventListener("message", onMessage);
+                        app.dispatchAction({
+                            type: UserStore.consts.OAUTH_SIGN_IN,
+                            error: data.error
+                        });
+                        break;
+                }
+            }
+            window.addEventListener("message", onMessage, false);
+        },
+        error: function(response) {
+            app.dispatchAction({
+                type: UserStore.consts.OAUTH_SIGN_IN,
+                error: response.data
+            });
+        }
     });
 };
+SignInPrototype._signInWithGoogle = function() {
+    this._signInWith("google");
+};
 SignInPrototype._signInWithGithub = function() {
-    app.dispatchAction({
-        type: UserStore.consts.SIGN_IN_WITH_GITHUB
-    });
+    this._signInWith("github");
 };
 
 SignInPrototype._onSignIn = function(errors) {

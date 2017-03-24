@@ -34,8 +34,7 @@ function UserStore() {
     };
 }
 Store.extend(UserStore, "links.UserStore", [
-    "SIGN_IN_WITH_GOOGLE",
-    "SIGN_IN_WITH_GITHUB",
+    "OAUTH_SIGN_IN",
     "CHANGE_LOCALE",
     "SIGN_OUT"
 ]);
@@ -113,44 +112,13 @@ UserStorePrototype.signInWithApiToken = function(data, callback) {
     });
 };
 
-UserStorePrototype.signUserInWith = function(provider, callback) {
-    var _this = this;
-
-    request.get(app.config.baseUrl + "/users/" + provider, {
-        success: function(response) {
-            var newWindow = window.open(
-                response.data.data,
-                "_blank",
-                "location=yes,height=570,width=520,scrollbars=yes,status=yes"
-            );
-
-            function onMessage(event) {
-                var data = JSON.parse(event.data);
-
-                switch (data.type) {
-                    case "load":
-                        newWindow.postMessage(JSON.stringify({
-                            type: "provider",
-                            provider: provider
-                        }), app.config.appUrl);
-                        break;
-                    case "success":
-                        window.removeEventListener("message", onMessage);
-                        UserStore_signUserIn(_this, data.user, callback);
-                        break;
-                    case "error":
-                        window.removeEventListener("message", onMessage);
-                        callback(data.error);
-                        break;
-                }
-            }
-            window.addEventListener("message", onMessage, false);
-        },
-        error: function(response) {
-            delete request.defaults.headers[HEADER_TOKEN];
-            callback(response.data);
-        }
-    });
+UserStorePrototype.oauthSignIn = function(error, user, callback) {
+    if (error) {
+        delete request.defaults.headers[HEADER_TOKEN];
+        callback(error);
+    } else {
+        UserStore_signUserIn(this, user, callback);
+    }
 };
 
 UserStorePrototype.signUserOut = function(callback) {
@@ -182,11 +150,8 @@ UserStorePrototype.handler = function(action) {
                 this.emit("changeLocale");
             }
             break;
-        case this.consts.SIGN_IN_WITH_GOOGLE:
-            this.signUserInWith("google", this.createChangeCallback("onSignIn"));
-            break;
-        case this.consts.SIGN_IN_WITH_GITHUB:
-            this.signUserInWith("github", this.createChangeCallback("onSignIn"));
+        case this.consts.OAUTH_SIGN_IN:
+            this.oauthSignIn(action.error, action.user, this.createChangeCallback("onSignIn"));
             break;
         case this.consts.SIGN_OUT:
             this.signUserOut(this.createChangeCallback("onSignOut"));
