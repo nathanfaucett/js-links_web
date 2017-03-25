@@ -1,7 +1,9 @@
 var virt = require("@nathanfaucett/virt"),
+    virtDOM = require("@nathanfaucett/virt-dom"),
     css = require("@nathanfaucett/css"),
     propTypes = require("@nathanfaucett/prop_types"),
     request = require("@nathanfaucett/request"),
+    eventListener = require("@nathanfaucett/event_listener"),
     Link = require("virt-ui-link"),
     RaisedButton = require("virt-ui-raised_button"),
     app = require("../../app"),
@@ -38,10 +40,14 @@ SignIn.contextTypes = {
 
 SignInPrototype.componentDidMount = function() {
     UserStore.on("onSignIn", this.onSignIn);
+    eventListener.on(virtDOM.findDOMNode(this.refs.github), "click", this.signInWithGoogle);
+    eventListener.on(virtDOM.findDOMNode(this.refs.google), "click", this.signInWithGithub);
 };
 
 SignInPrototype.componentWillUnmount = function() {
     UserStore.off("onSignIn", this.onSignIn);
+    eventListener.off(virtDOM.findDOMNode(this.refs.github), "click", this.signInWithGoogle);
+    eventListener.off(virtDOM.findDOMNode(this.refs.google), "click", this.signInWithGithub);
 };
 
 SignInPrototype._signInWith = function(provider) {
@@ -167,7 +173,7 @@ SignInPrototype.render = function() {
                 },
                 virt.createView(RaisedButton, {
                         style: styles.googleBtn,
-                        onClick: this.signInWithGoogle
+                        ref: "google"
                     },
                     virt.createView("img", {
                         style: styles.btnImage,
@@ -183,7 +189,7 @@ SignInPrototype.render = function() {
                 },
                 virt.createView(RaisedButton, {
                         style: styles.githubBtn,
-                        onClick: this.signInWithGithub
+                        ref: "github"
                     },
                     virt.createView("img", {
                         style: styles.btnImage,
