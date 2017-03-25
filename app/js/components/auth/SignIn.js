@@ -46,8 +46,6 @@ SignInPrototype.componentDidMount = function() {
 
 SignInPrototype.componentWillUnmount = function() {
     UserStore.off("onSignIn", this.onSignIn);
-    eventListener.off(virtDOM.findDOMNode(this.refs.github), "click", this.signInWithGoogle);
-    eventListener.off(virtDOM.findDOMNode(this.refs.google), "click", this.signInWithGithub);
 };
 
 SignInPrototype._signInWith = function(provider) {
