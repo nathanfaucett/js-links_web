@@ -40,7 +40,7 @@
     "vinyl-fs": "^2.4.3"
   },
   "dependencies": {
-    "@nathanfaucett/apt": "^0.0.4",
+    "@nathanfaucett/apt": "^0.0.5",
     "@nathanfaucett/array-for_each": "^0.0.1",
     "@nathanfaucett/array-map": "0.0.1",
     "@nathanfaucett/capitalize_string": "0.0.1",

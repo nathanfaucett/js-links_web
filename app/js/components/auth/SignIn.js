@@ -49,13 +49,15 @@ SignInPrototype.componentWillUnmount = function() {
 };
 
 SignInPrototype._signInWith = function(provider) {
+    var newWindow = window.open(
+        "",
+        "_blank",
+        "location=yes,height=512,width=512,scrollbars=yes,status=yes"
+    );
+
     request.get(app.config.baseUrl + "/users/" + provider, {
         success: function(response) {
-            var newWindow = window.open(
-                response.data.data,
-                "_blank",
-                "location=yes,height=512,width=512,scrollbars=yes,status=yes"
-            );
+            newWindow.href = response.data.data;
 
             function onMessage(event) {
                 var data = JSON.parse(event.data);
