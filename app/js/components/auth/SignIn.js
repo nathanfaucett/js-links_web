@@ -57,7 +57,7 @@ SignInPrototype._signInWith = function(provider) {
 
     request.get(app.config.baseUrl + "/users/" + provider, {
         success: function(response) {
-            newWindow.href = response.data.data;
+            newWindow.location.href = response.data.data;
 
             function onMessage(event) {
                 var data = JSON.parse(event.data);
